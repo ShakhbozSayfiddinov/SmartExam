@@ -2,18 +2,51 @@
 bin/
 obj/
 
+# Test artifacts
+TestResult*/
+*.coverage
+*.coveragexml
+
 # User secrets
 secrets.json
 appsettings*.json
 
+# Local settings
+*.user
+*.suo
+*.userosscache
+*.userprefs
+*.sln.docstates
+*.tmp
+*.bak
+
 # IDEs
 .vs/
 .vscode/
+.idea/
+.ionide/
 
 # Logs
 *.log
+
+# Packages / caches
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
 
 # OS junk
 *.swp
 *.DS_Store
 Thumbs.db
+
+# Databases / local artifacts
+*.db
+*.sqlite
+*.mdf
+*.ldf
+
+# Frontend deps
+node_modules/
+wwwroot/lib/

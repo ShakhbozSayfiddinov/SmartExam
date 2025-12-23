@@ -4,12 +4,12 @@ public class Topic : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
 
-    public string? Description { get; set; }
+    public string Description { get; set; }
     public bool IsDeleted { get; set; }
 
     public int ScienceId { get; set; }
 
-    public Science? Science { get; set; }
+    public Science Science { get; set; }
 
     public ICollection<Question> Questions { get; set; } = new List<Question>();
 }

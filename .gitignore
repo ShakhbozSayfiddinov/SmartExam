@@ -4,6 +4,7 @@ obj/
 
 # User secrets
 secrets.json
+appsettings*.json
 
 # IDEs
 .vs/

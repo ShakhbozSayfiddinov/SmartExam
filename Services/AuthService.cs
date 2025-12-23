@@ -32,7 +32,7 @@ public class AuthService : IAuthService
         }
 
         var studentRoleId = await _context.Roles
-            .Where(r => r.Name == "Student")
+            .Where(r => r.Name == "Student") 
             .Select(r => r.Id)
             .FirstOrDefaultAsync();
 

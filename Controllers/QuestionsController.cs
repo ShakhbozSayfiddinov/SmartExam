@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartExam.Exceptions;
+using SmartExam.Extensions;
 using SmartExam.Models.Questions;
 using SmartExam.Services.Interfaces;
 
@@ -27,11 +28,11 @@ public class QuestionsController : ControllerBase
         {
             var actorUserId = GetActorId();
             var questions = await _questionService.GetAllAsync(actorUserId);
-            return Ok(questions);
+            return ResponseHandler.ReturnResponseList(questions);
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 
@@ -42,11 +43,11 @@ public class QuestionsController : ControllerBase
         {
             var actorUserId = GetActorId();
             var question = await _questionService.GetByIdAsync(id, actorUserId);
-            return Ok(question);
+            return ResponseHandler.ReturnIActionResponse(question);
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 
@@ -57,11 +58,11 @@ public class QuestionsController : ControllerBase
         {
             var actorUserId = GetActorId();
             var question = await _questionService.CreateAsync(request, actorUserId);
-            return Ok(question);
+            return ResponseHandler.ReturnIActionResponse(question);
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 
@@ -72,11 +73,11 @@ public class QuestionsController : ControllerBase
         {
             var actorUserId = GetActorId();
             var question = await _questionService.UpdateAsync(id, request, actorUserId);
-            return Ok(question);
+            return ResponseHandler.ReturnIActionResponse(question);
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 
@@ -87,11 +88,11 @@ public class QuestionsController : ControllerBase
         {
             var actorUserId = GetActorId();
             await _questionService.DeleteAsync(id, actorUserId);
-            return NoContent();
+            return ResponseHandler.ReturnIActionResponse("Question deleted.");
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 

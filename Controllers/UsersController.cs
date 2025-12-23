@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartExam.Exceptions;
+using SmartExam.Extensions;
 using SmartExam.Models.Users;
 using SmartExam.Services.Interfaces;
 
@@ -27,11 +28,11 @@ public class UsersController : ControllerBase
         {
             var actorUserId = GetActorId();
             var users = await _userService.GetAllAsync(actorUserId);
-            return Ok(users);
+            return ResponseHandler.ReturnResponseList(users);
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 
@@ -42,11 +43,11 @@ public class UsersController : ControllerBase
         {
             var actorUserId = GetActorId();
             var user = await _userService.GetByIdAsync(id, actorUserId);
-            return Ok(user);
+            return ResponseHandler.ReturnIActionResponse(user);
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 
@@ -57,11 +58,11 @@ public class UsersController : ControllerBase
         {
             var actorUserId = GetActorId();
             var user = await _userService.CreateAsync(request, actorUserId);
-            return Ok(user);
+            return ResponseHandler.ReturnIActionResponse(user);
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 
@@ -73,11 +74,11 @@ public class UsersController : ControllerBase
             EnsureAdmin();
             var actorUserId = GetActorId();
             var user = await _userService.UpdateAsAdminAsync(id, request, actorUserId);
-            return Ok(user);
+            return ResponseHandler.ReturnIActionResponse(user);
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 
@@ -88,11 +89,11 @@ public class UsersController : ControllerBase
         {
             var actorUserId = GetActorId();
             var user = await _userService.UpdateSelfAsync(request, actorUserId);
-            return Ok(user);
+            return ResponseHandler.ReturnIActionResponse(user);
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 
@@ -104,11 +105,11 @@ public class UsersController : ControllerBase
             EnsureAdmin();
             var actorUserId = GetActorId();
             await _userService.DeleteAsAdminAsync(id, actorUserId);
-            return NoContent();
+            return ResponseHandler.ReturnIActionResponse("User deleted.");
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 
@@ -119,11 +120,11 @@ public class UsersController : ControllerBase
         {
             var actorUserId = GetActorId();
             await _userService.DeleteSelfAsync(actorUserId);
-            return NoContent();
+            return ResponseHandler.ReturnIActionResponse("User deleted.");
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 

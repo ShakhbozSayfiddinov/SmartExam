@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartExam")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5fc77d6c162879dcbb365590743a893f01468084")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1b4127d26782c329de4b850faccdf2fa729bda19")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartExam")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartExam")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

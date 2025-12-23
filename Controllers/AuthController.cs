@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartExam.Exceptions;
 using SmartExam.Models.Auth;
+using SmartExam.Extensions;
 using SmartExam.Services.Interfaces;
 
 namespace SmartExam.Controllers;
@@ -17,33 +18,33 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-[AllowAnonymous]
-[HttpPost("register")]
-public async Task<IActionResult> Register([FromBody] RegisterRequest request)
-{
+    [AllowAnonymous]
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    {
         try
         {
             var response = await _authService.RegisterAsync(request);
-            return Ok(response);
+            return ResponseHandler.ReturnIActionResponse(response);
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 
-[AllowAnonymous]
-[HttpPost("login")]
-public async Task<IActionResult> Login([FromBody] LoginRequest request)
-{
+    [AllowAnonymous]
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
         try
         {
             var response = await _authService.LoginAsync(request);
-            return Ok(response);
+            return ResponseHandler.ReturnIActionResponse(response);
         }
         catch (SmartExamException ex)
         {
-            return StatusCode(ex.StatusCode, new { error = ex.Message });
+            return ResponseHandler.ReturnError(ex.Message, ex.StatusCode);
         }
     }
 }

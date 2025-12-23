@@ -8,6 +8,6 @@ public class QuestionCreateRequest
     public string AnswerC { get; set; } = string.Empty;
     public string AnswerD { get; set; } = string.Empty;
     public string CorrectAnswer { get; set; } = string.Empty;
-    public string? Explanation { get; set; }
+    public string Explanation { get; set; }
     public int TopicId { get; set; }
 }

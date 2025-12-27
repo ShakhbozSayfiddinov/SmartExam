@@ -10,7 +10,6 @@ using SmartExam.Services.Interfaces;
 namespace SmartExam.Controllers;
 
 [ApiController]
-[Authorize]
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
@@ -22,6 +21,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetAll()
     {
         try
@@ -37,6 +37,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> GetById(int id)
     {
         try
@@ -52,6 +53,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create([FromBody] UserCreateRequest request)
     {
         try
@@ -67,6 +69,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> UpdateByAdmin(int id, [FromBody] UserUpdateRequest request)
     {
         try
@@ -83,6 +86,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("me")]
+    [Authorize]
     public async Task<IActionResult> UpdateMe([FromBody] UserUpdateRequest request)
     {
         try
@@ -98,6 +102,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [Authorize]
     public async Task<IActionResult> DeleteByAdmin(int id)
     {
         try
@@ -114,6 +119,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("me")]
+    [Authorize]
     public async Task<IActionResult> DeleteMe()
     {
         try

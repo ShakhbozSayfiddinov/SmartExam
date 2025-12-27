@@ -11,7 +11,7 @@ public class User : BaseEntity
 
     public int RoleId { get; set; }
 
-    public Role? Role { get; set; }
+    public Role Role { get; set; }
     public bool IsDeleted { get; set; }
 
     public ICollection<Question> Questions { get; set; } = new List<Question>();

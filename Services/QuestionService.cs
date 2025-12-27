@@ -151,7 +151,7 @@ public class QuestionService : IQuestionService
             throw new SmartExamException(StatusCodes.Status400BadRequest, "Topic not found.");
     }
 
-    private static char ParseCorrectAnswer(string? correctAnswer)
+    private static char ParseCorrectAnswer(string correctAnswer)
     {
         if (string.IsNullOrWhiteSpace(correctAnswer))
             throw new SmartExamException(StatusCodes.Status400BadRequest, "CorrectAnswer is required.");

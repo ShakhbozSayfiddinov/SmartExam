@@ -4,20 +4,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartExam.Exceptions;
 using SmartExam.Extensions;
-using SmartExam.Models.Questions;
+using SmartExam.Models.Topics;
 using SmartExam.Services.Interfaces;
 
 namespace SmartExam.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class QuestionsController : ControllerBase
+public class TopicsController : ControllerBase
 {
-    private readonly IQuestionService _questionService;
+    private readonly ITopicService _topicService;
 
-    public QuestionsController(IQuestionService questionService)
+    public TopicsController(ITopicService topicService)
     {
-        _questionService = questionService;
+        _topicService = topicService;
     }
 
     [HttpGet]
@@ -27,8 +27,8 @@ public class QuestionsController : ControllerBase
         try
         {
             var actorUserId = GetActorId();
-            var questions = await _questionService.GetAllAsync(actorUserId);
-            return ResponseHandler.ReturnResponseList(questions);
+            var topics = await _topicService.GetAllAsync(actorUserId);
+            return ResponseHandler.ReturnResponseList(topics);
         }
         catch (SmartExamException ex)
         {
@@ -43,8 +43,8 @@ public class QuestionsController : ControllerBase
         try
         {
             var actorUserId = GetActorId();
-            var question = await _questionService.GetByIdAsync(id, actorUserId);
-            return ResponseHandler.ReturnIActionResponse(question);
+            var topic = await _topicService.GetByIdAsync(id, actorUserId);
+            return ResponseHandler.ReturnIActionResponse(topic);
         }
         catch (SmartExamException ex)
         {
@@ -54,13 +54,13 @@ public class QuestionsController : ControllerBase
 
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Create([FromBody] QuestionCreateRequest request)
+    public async Task<IActionResult> Create([FromBody] TopicCreateRequest request)
     {
         try
         {
             var actorUserId = GetActorId();
-            var question = await _questionService.CreateAsync(request, actorUserId);
-            return ResponseHandler.ReturnIActionResponse(question);
+            var topic = await _topicService.CreateAsync(request, actorUserId);
+            return ResponseHandler.ReturnIActionResponse(topic);
         }
         catch (SmartExamException ex)
         {
@@ -70,13 +70,13 @@ public class QuestionsController : ControllerBase
 
     [HttpPut("{id:int}")]
     [Authorize]
-    public async Task<IActionResult> Update(int id, [FromBody] QuestionUpdateRequest request)
+    public async Task<IActionResult> Update(int id, [FromBody] TopicUpdateRequest request)
     {
         try
         {
             var actorUserId = GetActorId();
-            var question = await _questionService.UpdateAsync(id, request, actorUserId);
-            return ResponseHandler.ReturnIActionResponse(question);
+            var topic = await _topicService.UpdateAsync(id, request, actorUserId);
+            return ResponseHandler.ReturnIActionResponse(topic);
         }
         catch (SmartExamException ex)
         {
@@ -91,8 +91,8 @@ public class QuestionsController : ControllerBase
         try
         {
             var actorUserId = GetActorId();
-            await _questionService.DeleteAsync(id, actorUserId);
-            return ResponseHandler.ReturnIActionResponse("Question deleted.");
+            await _topicService.DeleteAsync(id, actorUserId);
+            return ResponseHandler.ReturnIActionResponse("Topic deleted.");
         }
         catch (SmartExamException ex)
         {

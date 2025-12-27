@@ -39,5 +39,26 @@ public static class DataSeeder
             await context.Users.AddAsync(defaultStudent);
             await context.SaveChangesAsync();
         }
+
+        var generalScience = await context.Sciences.FirstOrDefaultAsync(s => s.Name == "General");
+        if (generalScience is null)
+        {
+            generalScience = new Science { Name = "General", Description = "General science", IsDeleted = false };
+            await context.Sciences.AddAsync(generalScience);
+            await context.SaveChangesAsync();
+        }
+
+        var hasGeneralTopic = await context.Topics.AnyAsync(t => t.Name == "General" && t.ScienceId == generalScience.Id);
+        if (!hasGeneralTopic)
+        {
+            var generalTopic = new Topic
+            {
+                Name = "General",
+                Description = "General topic",
+                ScienceId = generalScience.Id
+            };
+            await context.Topics.AddAsync(generalTopic);
+            await context.SaveChangesAsync();
+        }
     }
 }

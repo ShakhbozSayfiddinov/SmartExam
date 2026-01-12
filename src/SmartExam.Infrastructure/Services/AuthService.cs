@@ -1,7 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SmartExam.Data;
 using SmartExam.Entities;

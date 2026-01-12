@@ -1,3 +1,4 @@
+#nullable enable
 namespace SmartExam.Models.Topics;
 
 public class TopicUpdateRequest

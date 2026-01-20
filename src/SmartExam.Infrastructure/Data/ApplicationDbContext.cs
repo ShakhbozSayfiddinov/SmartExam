@@ -14,6 +14,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Science> Sciences => Set<Science>();
     public DbSet<Topic> Topics => Set<Topic>();
     public DbSet<Question> Questions => Set<Question>();
+    public DbSet<Verification> Verifications => Set<Verification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,6 +25,7 @@ public class ApplicationDbContext : DbContext
         ConfigureSciences(modelBuilder);
         ConfigureTopics(modelBuilder);
         ConfigureQuestions(modelBuilder);
+        ConfigureVerifications(modelBuilder);
     }
 
     private static void ConfigureRoles(ModelBuilder modelBuilder)
@@ -124,6 +126,16 @@ public class ApplicationDbContext : DbContext
             entity.Property(q => q.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             entity.HasQueryFilter(q => !q.IsDeleted);
+        });
+    }
+
+    private static void ConfigureVerifications(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Verification>(entity =>
+        {
+            entity.Property(v => v.Email).IsRequired().HasMaxLength(256);
+            entity.Property(v => v.Guid).IsRequired();
+            entity.Property(v => v.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
     }
 }

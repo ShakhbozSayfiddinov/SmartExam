@@ -58,6 +58,7 @@ public class UsersController : ControllerBase
     {
         try
         {
+            EnsureAdmin();
             var actorUserId = GetActorId();
             var user = await _userService.CreateAsync(request, actorUserId);
             return ResponseHandler.ReturnIActionResponse(user);

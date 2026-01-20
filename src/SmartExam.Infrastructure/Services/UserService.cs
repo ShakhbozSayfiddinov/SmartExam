@@ -19,7 +19,7 @@ public class UserService : IUserService
         _context = context;
     }
 
-    public async Task<UserResponse> CreateAsync(UserCreateRequest request, int actorUserId)
+    public async Task<UserModel> CreateAsync(UserCreateRequest request, int actorUserId)
     {
         var actor = await GetActorAsync(actorUserId);
         EnsureAdmin(actor);
@@ -43,10 +43,10 @@ public class UserService : IUserService
         await _context.SaveChangesAsync();
 
         var roleName = await _context.Roles.Where(r => r.Id == roleId).Select(r => r.Name).FirstAsync();
-        return MapToResponse(user, roleName);
+        return UserModel.MapFromEntity(user, roleName);
     }
 
-    public async Task<IEnumerable<UserResponse>> GetAllAsync(int actorUserId)
+    public async Task<IEnumerable<UserModel>> GetAllAsync(int actorUserId)
     {
         var actor = await GetActorAsync(actorUserId);
         EnsureAdmin(actor);
@@ -56,10 +56,10 @@ public class UserService : IUserService
             .Where(u => u.IsDeleted == false)
             .ToListAsync();
 
-        return users.Select(u => MapToResponse(u, u.Role?.Name ?? string.Empty));
+        return users.Select(u => UserModel.MapFromEntity(u, u.Role?.Name ?? string.Empty));
     }
 
-    public async Task<UserResponse> GetByIdAsync(int userId, int actorUserId)
+    public async Task<UserModel> GetByIdAsync(int userId, int actorUserId)
     {
         var actor = await GetActorAsync(actorUserId);
         var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id == userId && u.IsDeleted == false)
@@ -68,10 +68,10 @@ public class UserService : IUserService
         if (!IsAdmin(actor) && actor.Id != user.Id)
             throw new SmartExamException(StatusCodes.Status403Forbidden, "Not allowed to view this user.");
 
-        return MapToResponse(user, user.Role?.Name ?? string.Empty);
+        return UserModel.MapFromEntity(user, user.Role?.Name ?? string.Empty);
     }
 
-    public async Task<UserResponse> UpdateAsAdminAsync(int userId, UserUpdateRequest request, int actorUserId)
+    public async Task<UserModel> UpdateAsAdminAsync(int userId, UserUpdateRequest request, int actorUserId)
     {
         var actor = await GetActorAsync(actorUserId);
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId && u.IsDeleted == false)
@@ -80,16 +80,16 @@ public class UserService : IUserService
         EnsureAdmin(actor);
         await ApplyUserUpdates(user, request, allowRoleChange: true);
         var roleName = await _context.Roles.Where(r => r.Id == user.RoleId).Select(r => r.Name).FirstOrDefaultAsync() ?? string.Empty;
-        return MapToResponse(user, roleName);
+        return UserModel.MapFromEntity(user, roleName);
     }
 
-    public async Task<UserResponse> UpdateSelfAsync(UserUpdateRequest request, int actorUserId)
+    public async Task<UserModel> UpdateSelfAsync(UserUpdateRequest request, int actorUserId)
     {
         var user = await GetActorAsync(actorUserId);
 
         await ApplyUserUpdates(user, request, allowRoleChange: false);
         var roleName = await _context.Roles.Where(r => r.Id == user.RoleId).Select(r => r.Name).FirstOrDefaultAsync() ?? string.Empty;
-        return MapToResponse(user, roleName);
+        return UserModel.MapFromEntity(user, roleName);
     }
 
     public async Task DeleteAsAdminAsync(int userId, int actorUserId)
@@ -150,17 +150,6 @@ public class UserService : IUserService
         return Convert.ToBase64String(hash);
     }
 
-    private static UserResponse MapToResponse(User user, string roleName) =>
-        new()
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email,
-            Role = roleName,
-            CreatedAt = user.CreatedAt
-        };
-
     private async Task ApplyUserUpdates(User user, UserUpdateRequest request, bool allowRoleChange)
     {
         if (!string.IsNullOrWhiteSpace(request.Email))
@@ -189,3 +178,4 @@ public class UserService : IUserService
         await _context.SaveChangesAsync();
     }
 }
+

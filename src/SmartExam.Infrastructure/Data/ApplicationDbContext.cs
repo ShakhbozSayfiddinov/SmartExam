@@ -14,7 +14,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Science> Sciences => Set<Science>();
     public DbSet<Topic> Topics => Set<Topic>();
     public DbSet<Question> Questions => Set<Question>();
-    public DbSet<Verification> Verifications => Set<Verification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,7 +24,6 @@ public class ApplicationDbContext : DbContext
         ConfigureSciences(modelBuilder);
         ConfigureTopics(modelBuilder);
         ConfigureQuestions(modelBuilder);
-        ConfigureVerifications(modelBuilder);
     }
 
     private static void ConfigureRoles(ModelBuilder modelBuilder)
@@ -55,12 +53,12 @@ public class ApplicationDbContext : DbContext
         {
             entity.Property(u => u.FirstName).IsRequired().HasMaxLength(100);
             entity.Property(u => u.LastName).IsRequired().HasMaxLength(100);
-            entity.Property(u => u.Email).IsRequired().HasMaxLength(256);
+            entity.Property(u => u.PhoneNumber).IsRequired().HasMaxLength(20);
             entity.Property(u => u.PasswordHash).IsRequired().HasMaxLength(256);
             entity.Property(u => u.IsDeleted).HasDefaultValue(false);
             entity.Property(u => u.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-            entity.HasIndex(u => u.Email).IsUnique();
+            entity.HasIndex(u => u.PhoneNumber).IsUnique();
 
             entity.HasMany(u => u.Questions)
                 .WithOne(q => q.CreatedBy!)
@@ -129,13 +127,4 @@ public class ApplicationDbContext : DbContext
         });
     }
 
-    private static void ConfigureVerifications(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Verification>(entity =>
-        {
-            entity.Property(v => v.Email).IsRequired().HasMaxLength(256);
-            entity.Property(v => v.Guid).IsRequired();
-            entity.Property(v => v.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-        });
-    }
 }

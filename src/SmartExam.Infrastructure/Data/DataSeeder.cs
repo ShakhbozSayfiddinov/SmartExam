@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SmartExam.Entities;
@@ -29,10 +31,10 @@ public static class DataSeeder
 
             var defaultStudent = new User
             {
-                FirstName = "Default",
-                LastName = "Student",
-                Email = "student@smartexam.test",
-                PasswordHash = "changeme", // TODO: replace with hashed password
+                FirstName = "Admin",
+                LastName = "Admin",
+                PhoneNumber = "+998997476017",
+                PasswordHash = HashPassword("Qwerty123$"),
                 RoleId = studentRoleId
             };
 
@@ -60,5 +62,13 @@ public static class DataSeeder
             await context.Topics.AddAsync(generalTopic);
             await context.SaveChangesAsync();
         }
+    }
+
+    private static string HashPassword(string password)
+    {
+        using var sha256 = SHA256.Create();
+        var bytes = Encoding.UTF8.GetBytes(password);
+        var hash = sha256.ComputeHash(bytes);
+        return Convert.ToBase64String(hash);
     }
 }

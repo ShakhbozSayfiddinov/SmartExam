@@ -23,11 +23,11 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
     {
-        var email = request.Email.Trim().ToLowerInvariant();
+        var phoneNumber = request.PhoneNumber.Trim().ToLowerInvariant();
 
-        if (await _context.Users.AnyAsync(u => u.Email == email && !u.IsDeleted))
+        if (await _context.Users.AnyAsync(u => u.PhoneNumber == phoneNumber && !u.IsDeleted))
         {
-            throw new SmartExamException(StatusCodes.Status400BadRequest, "User with this email already exists.");
+            throw new SmartExamException(StatusCodes.Status400BadRequest, "User with this phone number already exists.");
         }
 
         var studentRoleId = await _context.Roles
@@ -42,7 +42,7 @@ public class AuthService : IAuthService
         {
             FirstName = request.FirstName.Trim(),
             LastName = request.LastName.Trim(),
-            Email = email,
+            PhoneNumber = phoneNumber,
             PasswordHash = HashPassword(request.Password),
             RoleId = studentRoleId
         };
@@ -58,14 +58,14 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
     {
-        var email = request.Email.Trim().ToLowerInvariant();
+        var phoneNumber = request.PhoneNumber.Trim().ToLowerInvariant();
         var user = await _context.Users
             .Include(u => u.Role)
-            .FirstOrDefaultAsync(u => u.Email == email && u.IsDeleted == false);
+            .FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber && u.IsDeleted == false);
 
         if (user is null || !VerifyPassword(request.Password, user.PasswordHash))
         {
-            throw new SmartExamException(StatusCodes.Status401Unauthorized, "Invalid email or password.");
+            throw new SmartExamException(StatusCodes.Status401Unauthorized, "Invalid phone number or password.");
         }
 
         return BuildAuthResponse(user);
@@ -89,7 +89,7 @@ public class AuthService : IAuthService
         {
             UserId = user.Id,
             FullName = $"{user.FirstName} {user.LastName}".Trim(),
-            Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
             Role = user.Role?.Name ?? string.Empty,
             Token = token
         };

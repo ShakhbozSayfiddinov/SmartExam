@@ -24,9 +24,9 @@ public class UserService : IUserService
         var actor = await GetActorAsync(actorUserId);
         EnsureAdmin(actor);
 
-        var email = request.Email.Trim().ToLowerInvariant();
-        if (await _context.Users.AnyAsync(u => u.Email == email && u.IsDeleted == false))
-            throw new SmartExamException(StatusCodes.Status400BadRequest, "User with this email already exists.");
+        var phoneNumber = request.PhoneNumber.Trim().ToLowerInvariant();
+        if (await _context.Users.AnyAsync(u => u.PhoneNumber == phoneNumber && u.IsDeleted == false))
+            throw new SmartExamException(StatusCodes.Status400BadRequest, "User with this phone number already exists.");
 
         var roleId = request.RoleId ?? await GetStudentRoleIdAsync();
 
@@ -34,7 +34,7 @@ public class UserService : IUserService
         {
             FirstName = request.FirstName.Trim(),
             LastName = request.LastName.Trim(),
-            Email = email,
+            PhoneNumber = phoneNumber,
             PasswordHash = HashPassword(request.Password),
             RoleId = roleId
         };
@@ -152,13 +152,13 @@ public class UserService : IUserService
 
     private async Task ApplyUserUpdates(User user, UserUpdateRequest request, bool allowRoleChange)
     {
-        if (!string.IsNullOrWhiteSpace(request.Email))
+        if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
         {
-            var email = request.Email.Trim().ToLowerInvariant();
-            var exists = await _context.Users.AnyAsync(u => u.Email == email && u.Id != user.Id && u.IsDeleted == false);
+            var phoneNumber = request.PhoneNumber.Trim().ToLowerInvariant();
+            var exists = await _context.Users.AnyAsync(u => u.PhoneNumber == phoneNumber && u.Id != user.Id && u.IsDeleted == false);
             if (exists)
-                throw new SmartExamException(StatusCodes.Status400BadRequest, "User with this email already exists.");
-            user.Email = email;
+                throw new SmartExamException(StatusCodes.Status400BadRequest, "User with this phone number already exists.");
+            user.PhoneNumber = phoneNumber;
         }
 
         if (!string.IsNullOrWhiteSpace(request.FirstName))

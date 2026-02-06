@@ -28,6 +28,7 @@ public static class DataSeeder
         if (!await context.Users.AnyAsync())
         {
             var studentRoleId = await context.Roles.Where(r => r.Name == "Student").Select(r => r.Id).FirstAsync();
+            var adminRoleId = await context.Roles.Where(r => r.Name == "Admin").Select(r => r.Id).FirstAsync();
 
             var defaultStudent = new User
             {
@@ -35,7 +36,7 @@ public static class DataSeeder
                 LastName = "Admin",
                 PhoneNumber = "+998997476017",
                 PasswordHash = HashPassword("Qwerty123$"),
-                RoleId = studentRoleId
+                RoleId = adminRoleId,
             };
 
             await context.Users.AddAsync(defaultStudent);

@@ -1,13 +1,10 @@
 namespace SmartExam.Domain.Entities;
 
-public class Role : BaseEntity
+public class Permission : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
-
     public string Description { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
     public bool IsDeleted { get; set; }
 
-    public ICollection<User> Users { get; set; } = [];
     public ICollection<RolePermission> RolePermissions { get; set; } = [];
 }

@@ -7,7 +7,7 @@ public class Science : BaseEntity
     public bool IsDeleted { get; set; }
 
     public Guid? ScienceId { get; set; }
-    public Science? ParentScience { get; set; }
+    public Science ParentScience { get; set; }
 
     public ICollection<Science> ChildSciences { get; set; } = [];
     public ICollection<Department> Departments { get; set; } = [];

@@ -1,14 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using SmartExam.Entities;
+using SmartExam.Domain.Entities;
 
-namespace SmartExam.Data;
+namespace SmartExam.Infrastructure.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Science> Sciences => Set<Science>();

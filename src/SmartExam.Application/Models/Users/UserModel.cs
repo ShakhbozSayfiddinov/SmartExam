@@ -1,6 +1,6 @@
-using SmartExam.Entities;
+using SmartExam.Domain.Entities;
 
-namespace SmartExam.Models.Users;
+namespace SmartExam.Application.Models.Users;
 
 public class UserModel
 {

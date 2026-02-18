@@ -1,6 +1,6 @@
-using SmartExam.Models.Users;
+using SmartExam.Application.Models.Users;
 
-namespace SmartExam.Services.Interfaces;
+namespace SmartExam.Application.Services.Interfaces;
 
 public interface IUserService
 {

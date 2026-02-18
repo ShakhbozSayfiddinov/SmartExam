@@ -1,4 +1,4 @@
-namespace SmartExam.Entities;
+namespace SmartExam.Domain.Entities;
 
 public class Topic : BaseEntity
 {
@@ -11,5 +11,5 @@ public class Topic : BaseEntity
 
     public Science Science { get; set; }
 
-    public ICollection<Question> Questions { get; set; } = new List<Question>();
+    public ICollection<Question> Questions { get; set; } = [];
 }

@@ -1,21 +1,17 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SmartExam.Data;
-using SmartExam.Entities;
+using SmartExam.Domain.Entities;
 using SmartExam.Exceptions;
-using SmartExam.Models.Topics;
-using SmartExam.Services.Interfaces;
+using SmartExam.Application.Models.Topics;
+using SmartExam.Application.Services.Interfaces;
+using SmartExam.Infrastructure.Data;
 
-namespace SmartExam.Services;
+namespace SmartExam.Infrastructure.Services;
 
-public class TopicService : ITopicService
+public class TopicService(ApplicationDbContext context) : ITopicService
 {
-    private readonly ApplicationDbContext _context;
-
-    public TopicService(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    private readonly ApplicationDbContext _context = context;
 
     public async Task<TopicResponse> CreateAsync(TopicCreateRequest request, int actorUserId)
     {
@@ -105,11 +101,7 @@ public class TopicService : ITopicService
     private async Task<User> GetActorAsync(int actorUserId)
     {
         var actor = await _context.Users.Include(u => u.Role)
-            .FirstOrDefaultAsync(u => u.Id == actorUserId && u.IsDeleted == false);
-
-        if (actor is null)
-            throw new SmartExamException(StatusCodes.Status401Unauthorized, "Actor user not found or inactive.");
-
+            .FirstOrDefaultAsync(u => u.Id == actorUserId && u.IsDeleted == false) ?? throw new SmartExamException(StatusCodes.Status401Unauthorized, "Actor user not found or inactive.");
         return actor;
     }
 

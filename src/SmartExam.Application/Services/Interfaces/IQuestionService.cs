@@ -1,6 +1,6 @@
-using SmartExam.Models.Questions;
+using SmartExam.Application.Models.Questions;
 
-namespace SmartExam.Services.Interfaces;
+namespace SmartExam.Application.Services.Interfaces;
 
 public interface IQuestionService
 {

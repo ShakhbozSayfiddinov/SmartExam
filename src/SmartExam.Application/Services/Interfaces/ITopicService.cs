@@ -1,6 +1,6 @@
-using SmartExam.Models.Topics;
+using SmartExam.Application.Models.Topics;
 
-namespace SmartExam.Services.Interfaces;
+namespace SmartExam.Application.Services.Interfaces;
 
 public interface ITopicService
 {

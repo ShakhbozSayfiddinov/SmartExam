@@ -1,4 +1,4 @@
-namespace SmartExam.Entities;
+namespace SmartExam.Domain.Entities;
 
 public class Question : BaseEntity
 {

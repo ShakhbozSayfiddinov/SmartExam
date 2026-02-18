@@ -1,5 +1,5 @@
 #nullable enable
-namespace SmartExam.Models.Topics;
+namespace SmartExam.Application.Models.Topics;
 
 public class TopicResponse
 {

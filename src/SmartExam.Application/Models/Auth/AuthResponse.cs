@@ -1,4 +1,4 @@
-namespace SmartExam.Models.Auth;
+namespace SmartExam.Application.Models.Auth;
 
 public class AuthResponse
 {

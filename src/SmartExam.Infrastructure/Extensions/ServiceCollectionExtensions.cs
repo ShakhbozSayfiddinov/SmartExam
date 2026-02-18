@@ -3,9 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartExam.Data;
 using SmartExam.Services;
-using SmartExam.Services.Interfaces;
+using SmartExam.Application.Services.Interfaces;
+using SmartExam.Infrastructure.Data;
+using SmartExam.Infrastructure.Services;
 
-namespace SmartExam.Extensions;
+namespace SmartExam.Infrastructure.Extensions;
 
 public static class InfrastructureServiceCollectionExtensions
 {

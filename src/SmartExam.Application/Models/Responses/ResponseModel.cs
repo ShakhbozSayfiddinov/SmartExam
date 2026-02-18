@@ -1,4 +1,4 @@
-namespace SmartExam.Models.Responses;
+namespace SmartExam.Application.Models.Responses;
 
 public class ResponseModel<T>
 {

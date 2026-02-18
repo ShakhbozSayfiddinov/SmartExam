@@ -1,4 +1,4 @@
-namespace SmartExam.Entities;
+namespace SmartExam.Domain.Entities;
 
 public class Role : BaseEntity
 {
@@ -8,5 +8,5 @@ public class Role : BaseEntity
     public bool IsActive { get; set; }
     public bool IsDeleted { get; set; }
 
-    public ICollection<User> Users { get; set; } = new List<User>();
+    public ICollection<User> Users { get; set; } = [];
 }

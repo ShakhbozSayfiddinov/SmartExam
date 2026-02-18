@@ -3,22 +3,18 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SmartExam.Data;
-using SmartExam.Entities;
+using SmartExam.Domain.Entities;
 using SmartExam.Exceptions;
-using SmartExam.Models.Users;
-using SmartExam.Services.Interfaces;
+using SmartExam.Application.Models.Users;
+using SmartExam.Application.Services.Interfaces;
+using SmartExam.Infrastructure.Data;
 
-namespace SmartExam.Services;
+namespace SmartExam.Infrastructure.Services;
 
-public class UserService : IUserService
+public class UserService(ApplicationDbContext context) : IUserService
 {
-    private readonly ApplicationDbContext _context;
-
-    public UserService(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
+    private readonly ApplicationDbContext _context = context;
+    
     public async Task<UserModel> CreateAsync(UserCreateRequest request, int actorUserId)
     {
         var actor = await GetActorAsync(actorUserId);
@@ -126,11 +122,7 @@ public class UserService : IUserService
     private async Task<User> GetActorAsync(int actorUserId)
     {
         var actor = await _context.Users.Include(u => u.Role)
-            .FirstOrDefaultAsync(u => u.Id == actorUserId && u.IsDeleted == false);
-
-        if (actor is null)
-            throw new SmartExamException(StatusCodes.Status401Unauthorized, "Actor user not found or inactive.");
-
+            .FirstOrDefaultAsync(u => u.Id == actorUserId && u.IsDeleted == false) ?? throw new SmartExamException(StatusCodes.Status401Unauthorized, "Actor user not found or inactive.");
         return actor;
     }
 
@@ -144,9 +136,8 @@ public class UserService : IUserService
 
     private static string HashPassword(string password)
     {
-        using var sha256 = SHA256.Create();
         var bytes = Encoding.UTF8.GetBytes(password);
-        var hash = sha256.ComputeHash(bytes);
+        var hash = SHA256.HashData(bytes);
         return Convert.ToBase64String(hash);
     }
 
@@ -176,6 +167,6 @@ public class UserService : IUserService
         user.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
-    }
+    }   
 }
 

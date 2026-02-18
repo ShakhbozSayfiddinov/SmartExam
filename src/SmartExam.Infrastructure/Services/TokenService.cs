@@ -3,19 +3,14 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using SmartExam.Entities;
-using SmartExam.Services.Interfaces;
+using SmartExam.Domain.Entities;
+using SmartExam.Application.Services.Interfaces;
 
-namespace SmartExam.Services;
+namespace SmartExam.Infrastructure.Services;
 
-public class TokenService : ITokenService
+public class TokenService(IConfiguration configuration) : ITokenService
 {
-    private readonly IConfiguration _configuration;
-
-    public TokenService(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
+    private readonly IConfiguration _configuration = configuration;
 
     public string GenerateToken(User user)
     {
@@ -27,10 +22,10 @@ public class TokenService : ITokenService
 
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.MobilePhone, user.PhoneNumber),
-            new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}".Trim()),
-            new Claim(ClaimTypes.Role, user.Role?.Name ?? string.Empty)
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.MobilePhone, user.PhoneNumber),
+            new(ClaimTypes.Name, $"{user.FirstName} {user.LastName}".Trim()),
+            new(ClaimTypes.Role, user.Role?.Name ?? string.Empty)
         };
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));

@@ -1,4 +1,4 @@
-namespace SmartExam.Models.Questions;
+namespace SmartExam.Application.Models.Questions;
 
 public class QuestionUpdateRequest
 {

@@ -1,6 +1,6 @@
-using SmartExam.Models.Auth;
+using SmartExam.Application.Models.Auth;
 
-namespace SmartExam.Services.Interfaces;
+namespace SmartExam.Application.Services.Interfaces;
 
 public interface IAuthService
 {

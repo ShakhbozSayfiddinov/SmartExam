@@ -1,4 +1,4 @@
-namespace SmartExam.Models.Users;
+namespace SmartExam.Application.Models.Users;
 
 public class UserCreateRequest
 {

@@ -3,23 +3,18 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using SmartExam.Data;
-using SmartExam.Entities;
+using SmartExam.Domain.Entities;
 using SmartExam.Exceptions;
-using SmartExam.Models.Auth;
-using SmartExam.Services.Interfaces;
+using SmartExam.Application.Models.Auth;
+using SmartExam.Application.Services.Interfaces;
+using SmartExam.Infrastructure.Data;
 
-namespace SmartExam.Services;
+namespace SmartExam.Infrastructure.Services;
 
-public class AuthService : IAuthService
+public class AuthService(ApplicationDbContext context, ITokenService tokenService) : IAuthService
 {
-    private readonly ApplicationDbContext _context;
-    private readonly ITokenService _tokenService;
-
-    public AuthService(ApplicationDbContext context, ITokenService tokenService)
-    {
-        _context = context;
-        _tokenService = tokenService;
-    }
+    private readonly ApplicationDbContext _context = context;
+    private readonly ITokenService _tokenService = tokenService;
 
     public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
     {
@@ -73,9 +68,8 @@ public class AuthService : IAuthService
 
     private static string HashPassword(string password)
     {
-        using var sha256 = SHA256.Create();
         var bytes = Encoding.UTF8.GetBytes(password);
-        var hash = sha256.ComputeHash(bytes);
+        var hash = SHA256.HashData(bytes);
         return Convert.ToBase64String(hash);
     }
 

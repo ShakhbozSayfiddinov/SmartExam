@@ -1,6 +1,6 @@
-using SmartExam.Entities;
+using SmartExam.Domain.Entities;
 
-namespace SmartExam.Services.Interfaces;
+namespace SmartExam.Application.Services.Interfaces;
 
 public interface ITokenService
 {

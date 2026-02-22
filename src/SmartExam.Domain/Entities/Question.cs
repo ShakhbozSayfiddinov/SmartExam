@@ -15,8 +15,8 @@ public class Question : BaseEntity
 
     public bool IsDeleted { get; set; }
 
-    public Guid? CreatedByUserId { get; set; }
-    public User CreatedBy { get; set; }
+    public Guid TeacherId { get; set; }
+    public Teacher Teacher { get; set; }
 
     public Guid? ImageId { get; set; }
     public Attachment Image { get; set; }

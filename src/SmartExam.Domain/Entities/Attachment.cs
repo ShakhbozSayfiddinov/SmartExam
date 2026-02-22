@@ -7,4 +7,7 @@ public class Attachment : BaseEntity
     public long FileSize { get; set; }
     public string Url { get; set; } = string.Empty;
     public bool IsDeleted { get; set; }
+
+    public Guid ZoneId { get; set; }
+    public Zone Zone { get; set; }
 }

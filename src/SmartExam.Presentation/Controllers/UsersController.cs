@@ -4,49 +4,40 @@ using SmartExam.Application.Interfaces;
 
 namespace SmartExam.Presentation.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class UsersController : ControllerBase
+public class UsersController(IUserService userService) : AppController
 {
-    private readonly IUserService _userService;
-
-    public UsersController(IUserService userService)
-    {
-        _userService = userService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var users = await _userService.GetAllAsync();
-        return Ok(users);
+        var users = await userService.GetAllAsync();
+        return Success(users);
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var user = await _userService.GetByIdAsync(id);
-        return user is null ? NotFound() : Ok(user);
+        var user = await userService.GetByIdAsync(id);
+        return user is null ? NotFound() : Success(user);
     }
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateUserDto dto)
     {
-        var user = await _userService.CreateAsync(dto);
-        return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+        var user = await userService.CreateAsync(dto);
+        return Created(nameof(GetById), new { id = user.Id }, user);
     }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserDto dto)
     {
-        var user = await _userService.UpdateAsync(id, dto);
-        return Ok(user);
+        var user = await userService.UpdateAsync(id, dto);
+        return Success(user);
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        await _userService.DeleteAsync(id);
+        await userService.DeleteAsync(id);
         return NoContent();
     }
 }

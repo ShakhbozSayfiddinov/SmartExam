@@ -16,7 +16,7 @@ public class RoleService(AppDbContext context) : IRoleService
             .Where(r => !r.IsDeleted)
             .ToListAsync();
 
-        return roles.Select(RoleModel.MapFromEntity).ToList();
+        return roles.Select(RoleModel.MapFromEntity)?.ToList();
     }
 
     public async Task<RoleModel> GetByIdAsync(Guid id)
@@ -118,6 +118,6 @@ public class RoleService(AppDbContext context) : IRoleService
             .Select(rp => rp.Permission)
             .ToListAsync();
 
-        return permissions.Select(PermissionModel.MapFromEntity).ToList();
+        return permissions.Select(PermissionModel.MapFromEntity)?.ToList();
     }
 }

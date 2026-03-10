@@ -15,7 +15,7 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
         builder.Property(q => q.AnswerB).IsRequired().HasMaxLength(300);
         builder.Property(q => q.AnswerC).IsRequired().HasMaxLength(300);
         builder.Property(q => q.AnswerD).IsRequired().HasMaxLength(300);
-        builder.Property(q => q.Explation).HasMaxLength(1000);
+        builder.Property(q => q.Explanation).HasMaxLength(1000);
 
         builder.HasOne(q => q.Topic)
             .WithMany(t => t.Questions)
@@ -26,5 +26,10 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
             .WithMany()
             .HasForeignKey(q => q.ImageId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(q => q.Language)
+            .WithMany(l => l.Questions)
+            .HasForeignKey(q => q.LanguageId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

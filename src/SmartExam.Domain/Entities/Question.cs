@@ -8,7 +8,7 @@ public class Question : BaseEntity
     public string AnswerC { get; set; } = string.Empty;
     public string AnswerD { get; set; } = string.Empty;
     public int CorrectAnswer { get; set; }
-    public string Explation { get; set; } = string.Empty;
+    public string Explanation { get; set; } = string.Empty;
 
     public Guid TopicId { get; set; }
     public Topic Topic { get; set; }
@@ -20,4 +20,7 @@ public class Question : BaseEntity
 
     public Guid? ImageId { get; set; }
     public Attachment Image { get; set; }
+
+    public Guid LanguageId { get; set; }
+    public Language Language { get; set; }
 }

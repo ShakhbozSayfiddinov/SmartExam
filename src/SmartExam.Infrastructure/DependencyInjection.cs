@@ -20,6 +20,13 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IPermissionService, PermissionService>();
+        services.AddScoped<IScienceService, ScienceService>();
+        services.AddScoped<IDepartmentService, DepartmentService>();
+        services.AddScoped<ITopicService, TopicService>();
+        services.AddScoped<ILanguageService, LanguageService>();
+        services.AddScoped<IZoneService, ZoneService>();
+        services.AddScoped<ITeacherService, TeacherService>();
+        services.AddScoped<IStudentService, StudentService>();
 
         return services;
     }

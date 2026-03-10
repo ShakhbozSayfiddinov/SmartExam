@@ -27,6 +27,8 @@ public static class DependencyInjection
         services.AddScoped<IZoneService, ZoneService>();
         services.AddScoped<ITeacherService, TeacherService>();
         services.AddScoped<IStudentService, StudentService>();
+        services.AddScoped<IAttachmentService, AttachmentService>();
+        services.AddScoped<IQuestionService, QuestionService>();
 
         return services;
     }

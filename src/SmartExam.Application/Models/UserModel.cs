@@ -11,7 +11,8 @@ public class UserModel
     public DateTime? DateOfBirth { get; set; }
     public Guid RoleId { get; set; }
     public string RoleName { get; set; } = string.Empty;
-    public Guid? ImageId { get; set; }
+    public string ImageUrl { get; set; }
+    public string Status { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 
@@ -24,7 +25,8 @@ public class UserModel
         DateOfBirth = user.DateOfBirth,
         RoleId      = user.RoleId,
         RoleName    = user.Role?.Name ?? string.Empty,
-        ImageId     = user.ImageId,
+        ImageUrl    = user.Image?.Url,
+        Status      = user.IsDeleted ? "inactive" : "active",
         CreatedAt   = user.CreatedAt,
         UpdatedAt   = user.UpdatedAt,
     };

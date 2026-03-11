@@ -8,6 +8,8 @@ namespace SmartExam.Infrastructure.Persistence.Seeders;
 public static class DataSeeder
 {
     // Fixed GUIDs — migration da o'zgarmasin
+    public static readonly Guid AvatarsZoneId = Guid.Parse("cccccccc-0000-0000-0000-000000000000");
+
     private static readonly Guid SystemAdminRoleId = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000000");
     private static readonly Guid AdminRoleId       = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000001");
     private static readonly Guid TeacherRoleId     = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000002");
@@ -44,11 +46,27 @@ public static class DataSeeder
 
     public static async Task SeedAsync(AppDbContext context)
     {
+        await SeedAvatarsZoneAsync(context);
         await SeedLanguagesAsync(context);
         await SeedRolesAsync(context);
         await SeedPermissionsAsync(context);
         await SeedSystemAdminUserAsync(context);
         await SeedAdminUserAsync(context);
+    }
+
+    private static async Task SeedAvatarsZoneAsync(AppDbContext context)
+    {
+        if (await context.Zones.AnyAsync(z => z.Id == AvatarsZoneId)) return;
+
+        await context.Zones.AddAsync(new Zone
+        {
+            Id     = AvatarsZoneId,
+            Name   = "Avatars",
+            Width  = 0,
+            Height = 0,
+        });
+
+        await context.SaveChangesAsync();
     }
 
     private static async Task SeedLanguagesAsync(AppDbContext context)

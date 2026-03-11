@@ -7,6 +7,7 @@ using SmartExam.Application.Models;
 using SmartExam.Domain.Entities;
 using SmartExam.Domain.Exceptions;
 using SmartExam.Infrastructure.Persistence;
+using SmartExam.Infrastructure.Persistence.Seeders;
 
 namespace SmartExam.Infrastructure.Services;
 
@@ -16,22 +17,24 @@ public class UserService(AppDbContext context) : IUserService
     {
         var users = await context.Users
             .Include(u => u.Role)
+            .Include(u => u.Image)
             .Where(u => !u.IsDeleted)
             .ToListAsync();
 
-        return users.Select(UserModel.MapFromEntity).ToList();
+        return users.Select(UserModel.MapFromEntity)?.ToList();
     }
 
     public async Task<UserModel> GetByIdAsync(Guid id)
     {
         var user = await context.Users
             .Include(u => u.Role)
+            .Include(u => u.Image)
             .FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted);
 
         return user is null ? null : UserModel.MapFromEntity(user);
     }
 
-    public async Task<UserModel> CreateAsync(CreateUserDto dto)
+    public async Task<UserModel> CreateAsync(CreateUserDto dto, string imageUrl = null)
     {
         var user = new User
         {
@@ -46,17 +49,36 @@ public class UserService(AppDbContext context) : IUserService
             IsDeleted    = false,
         };
 
+        if (imageUrl is not null)
+        {
+            var attachment = new Attachment
+            {
+                Id          = Guid.NewGuid(),
+                FileName    = Path.GetFileName(imageUrl),
+                ContentType = "image/*",
+                FileSize    = 0,
+                Url         = imageUrl,
+                ZoneId      = DataSeeder.AvatarsZoneId,
+                CreatedAt   = DateTime.UtcNow,
+            };
+            await context.Attachments.AddAsync(attachment);
+            await context.SaveChangesAsync();
+            user.ImageId = attachment.Id;
+        }
+
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
         await context.Entry(user).Reference(u => u.Role).LoadAsync();
+        await context.Entry(user).Reference(u => u.Image).LoadAsync();
 
         return UserModel.MapFromEntity(user);
     }
 
-    public async Task<UserModel> UpdateAsync(Guid id, UpdateUserDto dto)
+    public async Task<UserModel> UpdateAsync(Guid id, UpdateUserDto dto, string imageUrl = null)
     {
         var user = await context.Users
             .Include(u => u.Role)
+            .Include(u => u.Image)
             .FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted)
             ?? throw new SmartExamException(404, "error_user_not_found");
 
@@ -67,8 +89,32 @@ public class UserService(AppDbContext context) : IUserService
         user.RoleId      = dto.RoleId;
         user.UpdatedAt   = DateTime.UtcNow;
 
+        if (imageUrl is not null)
+        {
+            if (user.Image is not null)
+            {
+                user.Image.Url      = imageUrl;
+                user.Image.FileName = Path.GetFileName(imageUrl);
+            }
+            else
+            {
+                var attachment = new Attachment
+                {
+                    Id          = Guid.NewGuid(),
+                    FileName    = Path.GetFileName(imageUrl),
+                    ContentType = "image/*",
+                    FileSize    = 0,
+                    Url         = imageUrl,
+                    ZoneId      = DataSeeder.AvatarsZoneId,
+                    CreatedAt   = DateTime.UtcNow,
+                };
+                await context.Attachments.AddAsync(attachment);
+                await context.SaveChangesAsync();
+                user.ImageId = attachment.Id;
+            }
+        }
+
         await context.SaveChangesAsync();
-        await context.Entry(user).Reference(u => u.Role).LoadAsync();
 
         return UserModel.MapFromEntity(user);
     }

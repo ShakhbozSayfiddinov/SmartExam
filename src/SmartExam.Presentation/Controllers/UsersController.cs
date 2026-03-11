@@ -4,7 +4,7 @@ using SmartExam.Application.Interfaces;
 
 namespace SmartExam.Presentation.Controllers;
 
-public class UsersController(IUserService userService) : AppController
+public class UsersController(IUserService userService, IFileStorageService fileStorage) : AppController
 {
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -21,16 +21,18 @@ public class UsersController(IUserService userService) : AppController
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateUserDto dto)
+    public async Task<IActionResult> Create([FromForm] CreateUserDto dto, IFormFile image = null)
     {
-        var user = await userService.CreateAsync(dto);
+        string imageUrl = image is not null ? await fileStorage.SaveAsync(image) : null;
+        var user = await userService.CreateAsync(dto, imageUrl);
         return Created(nameof(GetById), new { id = user.Id }, user);
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserDto dto)
+    public async Task<IActionResult> Update(Guid id, [FromForm] UpdateUserDto dto, IFormFile image = null)
     {
-        var user = await userService.UpdateAsync(id, dto);
+        string imageUrl = image is not null ? await fileStorage.SaveAsync(image) : null;
+        var user = await userService.UpdateAsync(id, dto, imageUrl);
         return Success(user);
     }
 

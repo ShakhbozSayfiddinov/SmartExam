@@ -51,3 +51,4 @@ Thumbs.db
 # Frontend deps
 node_modules/
 wwwroot/lib/
+wwwroot/uploads/

@@ -38,6 +38,9 @@ public class AuthService(AppDbContext context, IConfiguration configuration) : I
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
 
+        await context.Students.AddAsync(new Student { Id = Guid.NewGuid(), UserId = user.Id });
+        await context.SaveChangesAsync();
+
         return GenerateToken(user, studentRole.Name);
     }
 

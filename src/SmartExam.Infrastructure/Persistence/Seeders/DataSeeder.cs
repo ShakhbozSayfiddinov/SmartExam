@@ -12,8 +12,8 @@ public static class DataSeeder
 
     private static readonly Guid SystemAdminRoleId = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000000");
     private static readonly Guid AdminRoleId       = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000001");
-    private static readonly Guid TeacherRoleId     = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000002");
-    private static readonly Guid StudentRoleId     = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000003");
+    public static readonly Guid TeacherRoleId      = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000002");
+    public static readonly Guid StudentRoleId      = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000003");
 
     private static readonly Guid SystemAdminUserId = Guid.Parse("bbbbbbbb-0000-0000-0000-000000000000");
     private static readonly Guid AdminUserId       = Guid.Parse("bbbbbbbb-0000-0000-0000-000000000001");

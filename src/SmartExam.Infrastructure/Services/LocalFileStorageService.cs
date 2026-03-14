@@ -10,7 +10,8 @@ public class LocalFileStorageService(IWebHostEnvironment env) : IFileStorageServ
 
     public async Task<string> SaveAsync(IFormFile file)
     {
-        string uploadsPath = Path.Combine(env.WebRootPath, UploadFolder);
+        string webRoot     = env.WebRootPath ?? Path.Combine(env.ContentRootPath, "wwwroot");
+        string uploadsPath = Path.Combine(webRoot, UploadFolder);
         Directory.CreateDirectory(uploadsPath);
 
         string extension = Path.GetExtension(file.FileName);
@@ -27,7 +28,8 @@ public class LocalFileStorageService(IWebHostEnvironment env) : IFileStorageServ
     {
         if (string.IsNullOrWhiteSpace(url)) return;
 
-        string filePath = Path.Combine(env.WebRootPath, url.TrimStart('/'));
+        string webRoot  = env.WebRootPath ?? Path.Combine(env.ContentRootPath, "wwwroot");
+        string filePath = Path.Combine(webRoot, url.TrimStart('/'));
         if (File.Exists(filePath))
             File.Delete(filePath);
     }

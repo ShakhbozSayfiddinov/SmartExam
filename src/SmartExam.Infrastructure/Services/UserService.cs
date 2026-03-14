@@ -68,6 +68,8 @@ public class UserService(AppDbContext context) : IUserService
 
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
+        await CreateProfileAsync(dto.RoleId, user.Id);
+        await context.SaveChangesAsync();
         await context.Entry(user).Reference(u => u.Role).LoadAsync();
         await context.Entry(user).Reference(u => u.Image).LoadAsync();
 
@@ -82,12 +84,21 @@ public class UserService(AppDbContext context) : IUserService
             .FirstOrDefaultAsync(u => u.Id == id && !u.IsDeleted)
             ?? throw new SmartExamException(404, "error_user_not_found");
 
+        Guid oldRoleId = user.RoleId;
+
         user.FirstName   = dto.FirstName;
         user.LastName    = dto.LastName;
         user.PhoneNumber = dto.PhoneNumber;
         user.DateOfBirth = dto.DateOfBirth;
         user.RoleId      = dto.RoleId;
         user.UpdatedAt   = DateTime.UtcNow;
+
+        if (oldRoleId != dto.RoleId)
+        {
+            await UpdateTeacherStatusAsync(oldRoleId, id, isDeleted: true);
+            await UpdateStudentStatusAsync(oldRoleId, id, isDeleted: true);
+            await CreateProfileAsync(dto.RoleId, id);
+        }
 
         if (imageUrl is not null)
         {
@@ -129,6 +140,36 @@ public class UserService(AppDbContext context) : IUserService
         user.UpdatedAt = DateTime.UtcNow;
 
         await context.SaveChangesAsync();
+    }
+
+    private async Task CreateTeacherAsync(Guid userId)
+        => await context.Teachers.AddAsync(new Teacher { Id = Guid.NewGuid(), UserId = userId });
+
+    private async Task CreateStudentAsync(Guid userId)
+        => await context.Students.AddAsync(new Student { Id = Guid.NewGuid(), UserId = userId });
+
+    private async Task CreateProfileAsync(Guid roleId, Guid userId)
+    {
+        if (roleId == DataSeeder.TeacherRoleId)
+            await CreateTeacherAsync(userId);
+        else if (roleId == DataSeeder.StudentRoleId)
+            await CreateStudentAsync(userId);
+    }
+
+    private async Task UpdateTeacherStatusAsync(Guid roleId, Guid userId, bool isDeleted)
+    {
+        if (roleId != DataSeeder.TeacherRoleId) return;
+
+        var teacher = await context.Teachers.FirstOrDefaultAsync(t => t.UserId == userId && t.IsDeleted != isDeleted);
+        if (teacher is not null) teacher.IsDeleted = isDeleted;
+    }
+
+    private async Task UpdateStudentStatusAsync(Guid roleId, Guid userId, bool isDeleted)
+    {
+        if (roleId != DataSeeder.StudentRoleId) return;
+
+        var student = await context.Students.FirstOrDefaultAsync(s => s.UserId == userId && s.IsDeleted != isDeleted);
+        if (student is not null) student.IsDeleted = isDeleted;
     }
 
     private static string HashPassword(string password)
